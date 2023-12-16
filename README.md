@@ -54,6 +54,6 @@ Abrir el navegador y dirigirse a la dirección:
 ```
 
 # Base de datos - SQLite
-Las contraseñsa y la información de los usuarios se guarda en un archivo llamado database.sqlite el cual se puede visualizar utilizando la extension de VS Code SQLite Viewer.
+Las contraseñsa y la información de los usuarios se guarda en un archivo llamado database.sqlite el cual se crea automaticamente una vez se empieze a utlizar la API y las tablas se pueden visualizar utilizando la extension de VS Code SQLite Viewer.
 
 Disfruta de la API.
