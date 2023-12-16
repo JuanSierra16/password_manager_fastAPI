@@ -5,15 +5,21 @@ from config.database import Session
 from models.password import Password as PasswordModel
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
-from middlewares.jwt_bearer import JWTBearer
+from utils.authentication import get_current_active_user
+from schemas.user import User
+from fastapi import HTTPException
+from utils.session import get_db
 
 password_router = APIRouter()
 
-@password_router.get("/passwords", tags=['passwords'], response_model = List[Password], status_code=200, dependencies=[Depends(JWTBearer())])
-def get_passwords() -> List[Password]:
-    db = Session()
-    result = db.query(PasswordModel).all()
-    return JSONResponse(status_code=200, content=jsonable_encoder(result))
+@password_router.get("/passwords", tags=['passwords'], response_model=List[Password], status_code=200)
+def get_passwords(current_user: User = Depends(get_current_active_user), db: Session = Depends(get_db)):
+    if not current_user:
+        raise HTTPException(status_code=401, detail="Unauthenticated user")
+
+    # Filtrar las contraseñas del usuario activo
+    user_passwords = db.query(Password).filter(Password.user_id == current_user.id).all()
+    return user_passwords
 
 @password_router.get("/passwords/{id}", tags=['passwords'], response_model = Password, status_code=200)
 def get_password(id: int = Path(ge=1, le=2000)):
@@ -25,10 +31,13 @@ def get_password(id: int = Path(ge=1, le=2000)):
         response = JSONResponse(status_code=404, content={"message": "Password not found"})
     return response
 
-@password_router.post("/passwords", tags=['passwords'], response_model = List[Password], status_code=201)
-def create_password(password: Password):
-    db = Session()
-    new_password = PasswordModel(**password.model_dump())
+@password_router.post("/passwords", tags=['passwords'], response_model=Password, status_code=201)
+def create_password(password: Password, current_user: User = Depends(get_current_active_user), db: Session = Depends(get_db)):
+    if not current_user:
+        raise HTTPException(status_code=401, detail="Unauthenticated user")
+
+    # Crea una nueva contraseña asociada al usuario actual
+    new_password = Password(**password.model_dump(), user_id=current_user.id)
     db.add(new_password)
     db.commit()
     return JSONResponse(status_code=201, content={"message": "Password created successfully"})
