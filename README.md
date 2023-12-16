@@ -1,6 +1,6 @@
 # password_manager_fastAPI
 Proyecto de Gestión de Contraseñas: API para gestionar un sistema de almacenamiento de contraseñas. 
-La API debe permite al usuario añadir nuevas contraseñas (la contraseña se genera aleatoriamente), 
+La API permite al usuario añadir nuevas contraseñas (la contraseña se genera aleatoriamente), 
 visualizar las contraseñas guardadas, actualizar detalles de contraseñas existentes y eliminar contraseñas.
 
 ## Requisitos
