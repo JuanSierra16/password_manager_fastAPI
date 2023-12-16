@@ -53,4 +53,7 @@ Abrir el navegador y dirigirse a la dirección:
    http://localhost:8000/docs#/
 ```
 
+# Base de datos - SQLite
+Las contraseñsa y la información de los usuarios se guarda en un archivo llamado database.sqlite el cual se puede visualizar utilizando la extension de VS Code SQLite Viewer.
+
 Disfruta de la API.
